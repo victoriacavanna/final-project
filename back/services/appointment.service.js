@@ -66,3 +66,5 @@ export const updateAppointment = async (id, appointmentData) => {
     throw new Error(error.message);
   }
 };
+
+

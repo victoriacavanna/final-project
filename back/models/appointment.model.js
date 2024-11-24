@@ -14,13 +14,14 @@ const appointmentSchema = new Schema({
   hour: {
     type: String,
   },
-  appointmentType: {
-    type: String,
-    enum: ["Consulta", "Limpieza", "Tratamiento", "Control", "Otro"],
-  },
+
   reminderSent: {
     type: Boolean,
     default: false,
+  },
+  appointmentType: {
+    type: String,
+    enum: ["Consulta", "Limpieza", "Tratamiento", "Control", "Otro"],
   },
   status: {
     type: String,
