@@ -7,7 +7,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import es from "date-fns/locale/es";
 
-const AddForm = ({ fetchAppointments }) => {
+const AddForm = ({ fetchAppointments, handleCloseModal  }) => {
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
 
@@ -36,6 +36,7 @@ const AddForm = ({ fetchAppointments }) => {
 
       await fetchAppointments();
       resetForm();
+      handleCloseModal();  // Cerrar el modal después de agregar el turno
     } catch (error) {
       console.error("Error al agregar turno:", error);
     }

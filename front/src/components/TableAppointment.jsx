@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { Button, Modal, Table } from "react-bootstrap";
+import { Button, Modal, Table, Form } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faPenToSquare, faTrash, faArrowDown, faArrowUp, faMinus } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import UpdateModal from "./UpdateModal";
 
@@ -10,6 +10,8 @@ const TableAppointment = ({ appointments }) => {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [appointmentsData, setAppointmentsData] = useState(appointments);
+  const [searchTerm, setSearchTerm] = useState(""); // Estado para la búsqueda
+  const [sortOrder, setSortOrder] = useState("none"); // Estado para el orden (ascendente o descendente)
 
   const handleClose = () => setShow(false);
   const handleShow = (appointment) => {
@@ -96,27 +98,73 @@ const TableAppointment = ({ appointments }) => {
 
   useEffect(() => {
     fetchAppointments();
-  }, []);
+  }, []); // Al cargar el componente, se obtiene la lista de citas
+
+  useEffect(() => {
+    setAppointmentsData(appointments); // Cuando cambian las props, actualiza el estado
+  }, [appointments]);
+
+  // Filtrar citas según el término de búsqueda
+  const filteredAppointments = appointmentsData.filter(
+    (appointment) =>
+      appointment.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      appointment.date.includes(searchTerm)
+  );
+
+   // Ordenar citas por horario
+   const sortedAppointments = [...filteredAppointments].sort((a, b) => {
+    if (sortOrder === "asc") {
+      return a.hour.localeCompare(b.hour);
+    } else if (sortOrder === "desc") {
+      return b.hour.localeCompare(a.hour);
+    }
+    return 0; // Si el estado es "none", no ordenar
+  });
+
+  // Alternar el orden
+  const toggleSortOrder = () => {
+    setSortOrder((prevOrder) => {
+      if (prevOrder === "none") return "asc";
+      if (prevOrder === "asc") return "desc";
+      return "none";
+    });
+  };
 
   return (
     <>
-      {appointmentsData && appointmentsData.length > 0 ? (
+      <div className="mb-3">
+        <Form.Control
+          type="text"
+          placeholder="Buscar por nombre o fecha"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+      {sortedAppointments && sortedAppointments.length > 0 ? (
         <div>
           <Table className="table table-striped table-dark caption-top" responsive="md">
             <thead>
               <tr>
-                <th scope="col">#</th>
-                <th scope="col">Nombre</th>
-                <th scope="col">Teléfono</th>
-                <th scope="col">Fecha</th>
-                <th scope="col">Horario</th>
+                <th scope="col" className="align-items-center">#</th>
+                <th scope="col" className="align-items-center">Nombre</th>
+                <th scope="col" className="align-items-center">Teléfono</th>
+                <th scope="col" className="align-items-center">Fecha</th>
+                <th scope="col" className="align-items-center">
+                  Horario
+                  <Button
+                    variant="link"
+                    className="text-light ms-1 p-0 border-0 shadow-none"
+                    onClick={toggleSortOrder} >
+                    <FontAwesomeIcon icon={sortOrder === "none" ? faMinus : sortOrder === "asc" ? faArrowUp : faArrowDown} />
+                  </Button>
+                </th>
                 <th scope="col">Estado</th>
                 <th scope="col">Tipo de Consulta</th>
                 <th scope="col">Acciones</th>
               </tr>
             </thead>
             <tbody>
-              {appointmentsData.map((appointment, index) => (
+              {sortedAppointments.map((appointment, index) => (
                 <tr key={appointment._id}>
                   <th scope="row">{index + 1}</th>
                   <td>{appointment.name}</td>
@@ -196,7 +244,7 @@ const TableAppointment = ({ appointments }) => {
           </Table>
         </div>
       ) : (
-        <h3 className="text-center">No hay turnos agendados</h3>
+        <h3 className="text-center">No hay turnos que coincidan con la búsqueda</h3>
       )}
     </>
   );

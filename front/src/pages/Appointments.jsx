@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Container, Row } from 'react-bootstrap';
+import { Container, Row, Button, Modal } from 'react-bootstrap';
 import AddForm from "../components/AddForm";
 import Table from "../components/TableAppointment";
 import axios from 'axios';
 
 const Appointments = () => {
   const [appointments, setAppointments] = useState([]);
+  const [showModal, setShowModal] = useState(false);
 
   const fetchAppointments = async () => {
     try {
@@ -16,6 +17,9 @@ const Appointments = () => {
     }
   };
 
+  const handleCloseModal = () => setShowModal(false);
+  const handleShowModal = () => setShowModal(true);
+
   useEffect(() => {
     fetchAppointments();
   }, []);
@@ -23,15 +27,24 @@ const Appointments = () => {
   return (
     <Container>
       <section className="appointment-section d-flex flex-column align-items-center justify-content-center">
-        <Row className='w-100 py-5'>
-          <h2 className="text-center subtitle">Agregar Turno</h2>
-          <AddForm fetchAppointments={fetchAppointments} /> 
+        <Row className='w-100 py-5 d-flex justify-content-center'>
+          <h2 className="text-center subtitle">Lista de turnos</h2>
+          <Button onClick={handleShowModal} className="btn-form-add">Agregar Turno</Button> 
         </Row>
         <Row className='py-5'>
-          <h2 className="text-center subtitle">Lista de turnos</h2>
           <Table appointments={appointments} /> 
         </Row>
       </section>
+
+      {/* Modal para agregar turno */}
+      <Modal show={showModal} onHide={handleCloseModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Agregar Nuevo Turno</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+        <AddForm fetchAppointments={fetchAppointments} handleCloseModal={handleCloseModal} />
+        </Modal.Body>
+      </Modal>
     </Container>
   );
 };
