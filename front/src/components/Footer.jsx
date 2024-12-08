@@ -16,16 +16,16 @@ const Footer = () => {
           >
             <ul className="footer-nav d-flex flex-column align-items-center align-items-md-end">
               <li className="footer-item">
-                <Link to={"/menu"}>Inicio</Link>
+                <Link to={"/"}>Inicio</Link>
               </li>
               <li className="footer-item">
-                <Link to={"/aboutus"}>Servicios</Link>
+                <Link to={"/servicios"}>Servicios</Link>
               </li>
               <li className="footer-item">
-                <Link to={"/contact"}>Turnos</Link>
+                <Link to={"/turnos"}>Turnos</Link>
               </li>
               <li className="footer-item">
-                <Link to={"/contact"}>Contactos</Link>
+                <Link to={"/contactos"}>Contactos</Link>
               </li>
             </ul>
           </Col>
