@@ -50,3 +50,38 @@
     justify-content: center;
     align-items: center;
 }
+
+/* Estilo global para los modales de SweetAlert2 */
+.swal2-popup {
+    background-color: #170d35 !important; /* Fondo del modal */
+    color: #d7f39e !important;           /* Color del texto */
+    border: 2px solid #d7f39e !important; /* Borde */
+    border-radius: 10px !important;      /* Bordes redondeados */
+    font-family: 'Roboto', sans-serif;  /* Fuente */
+  }
+  
+  .swal2-title {
+    color: #d7f39e !important;          /* Color del título */
+    font-size: 1.8rem !important;       /* Tamaño del título */
+    font-weight: bold !important;
+  }
+  
+  .swal2-html-container {
+    color: #d7f39e  !important;          /* Color del texto principal */
+    font-size: 1.2rem !important;
+  }
+  
+  .swal2-confirm {
+    background-color: #d7f39e !important; /* Fondo del botón */
+    color: #170d35 !important;              /* Color del texto del botón */
+    border-radius: 5px !important;
+    padding: 10px 20px !important;
+    font-weight: bold !important;
+  }
+  
+  .swal2-cancel {
+    background-color: #f5f5f5 !important; /* Fondo del botón de cancelar */
+    color: #333 !important;
+    border-radius: 5px !important;
+    padding: 10px 20px !important;
+  }

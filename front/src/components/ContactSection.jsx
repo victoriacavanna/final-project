@@ -2,6 +2,7 @@ import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPhone, faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import Swal from 'sweetalert2';
 
 const ContactSection = () => {
     const [formData, setFormData] = useState({
@@ -40,11 +41,26 @@ const ContactSection = () => {
                     service: '',
                     message: ''
                 });
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Mensaje enviado',
+                    text: '¡Gracias por tu mensaje! Nos pondremos en contacto contigo pronto.',
+                });
             } else {
                 console.error('Error al enviar el formulario');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Hubo un problema al enviar tu mensaje. Por favor, intenta de nuevo.',
+                });
             }
         } catch (error) {
             console.error('Error en la solicitud:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Hubo un error al enviar el formulario. Intenta nuevamente.',
+            });
         }
 
         console.log(formData)

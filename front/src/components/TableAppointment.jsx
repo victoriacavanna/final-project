@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrash, faArrowDown, faArrowUp, faMinus } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import UpdateModal from "./UpdateModal";
+import Swal from "sweetalert2";
 
 const TableAppointment = ({ appointments }) => {
   const [show, setShow] = useState(false);
@@ -28,6 +29,11 @@ const TableAppointment = ({ appointments }) => {
       setAppointmentsData(response.data);
     } catch (error) {
       console.error("Error al traer datos de turnos:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "No se pudo cargar la lista de turnos.",
+      });
     }
   };
 
@@ -58,12 +64,24 @@ const TableAppointment = ({ appointments }) => {
             (appointment) => appointment._id !== appointmentId
           )
         );
+
+        Swal.fire({
+          icon: "success",
+          title: "¡Eliminado!",
+          text: "El turno ha sido eliminado correctamente.",
+        });
+
         handleClose();
       } else {
         throw new Error("Error al eliminar el turno");
       }
     } catch (error) {
       console.error("Error al eliminar el turno:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "No se pudo eliminar el turno.",
+      });
     }
   };
 
@@ -88,11 +106,22 @@ const TableAppointment = ({ appointments }) => {
               : appointment
           )
         );
+        console.log("Turno actualizado correctamente"); // Debug
+        Swal.fire({
+          icon: "success",
+          title: "¡Actualizado!",
+          text: "El turno ha sido modificado correctamente.",
+        });
       } else {
         throw new Error("Error al actualizar el estado del turno");
       }
     } catch (error) {
       console.error("Error al actualizar el estado del turno:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "No se pudo actualizar el turno.",
+      });
     }
   };
 
@@ -206,7 +235,7 @@ const TableAppointment = ({ appointments }) => {
                     >
                       <FontAwesomeIcon icon={faTrash} />
                     </Button>
-                    <Modal show={show} onHide={handleClose}>
+                    <Modal show={show} onHide={handleClose} centered>
                       <Modal.Header closeButton>
                         <Modal.Title>Confirmar Eliminación</Modal.Title>
                       </Modal.Header>

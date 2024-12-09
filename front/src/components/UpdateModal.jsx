@@ -6,6 +6,7 @@ import es from "date-fns/locale/es";
 import "react-datepicker/dist/react-datepicker.css";
 import { useAuth } from "../context/AuthContext";
 import { useAppointments } from "../context/AppointmentsContext";
+import Swal from "sweetalert2";
 
 const UpdateModal = ({ show, handleClose, appointmentId, handleAddAppointment }) => {
   const [name, setName] = useState("");
@@ -38,6 +39,11 @@ const UpdateModal = ({ show, handleClose, appointmentId, handleAddAppointment })
           setSelectedTime(hour);
         } catch (error) {
           console.error("Error fetching appointment details:", error);
+          Swal.fire({
+            icon: "error",
+            title: "Error al obtener los detalles",
+            text: "No se pudieron cargar los datos del turno.",
+          });
         }
       }
     };
@@ -67,9 +73,21 @@ const UpdateModal = ({ show, handleClose, appointmentId, handleAddAppointment })
       );
       
       await handleAddAppointment();
+
+      Swal.fire({
+        icon: "success",
+        title: "Turno actualizado",
+        text: "El turno se modificó correctamente.",
+      });
+
       await handleClose();
     } catch (error) {
       console.error("Error updating appointment:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error al actualizar",
+        text: "No se pudo modificar el turno. Por favor, inténtalo de nuevo.",
+      });
     }
   };
 

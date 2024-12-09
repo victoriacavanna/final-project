@@ -3,6 +3,7 @@ import { Button, Form, Modal } from 'react-bootstrap';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { Navigate } from 'react-router-dom'; // Importa Navigate desde react-router-dom
+import Swal from 'sweetalert2';
 
 const Login = ({ show, handleClose }) => {
     const [email, setEmail] = useState('');
@@ -17,8 +18,18 @@ const Login = ({ show, handleClose }) => {
         if (success) {
             setRedirectToAdmin(true); 
             handleClose(); 
+            Swal.fire({
+                icon: 'success',
+                title: '¡Bienvenido!',
+                text: 'Has iniciado sesión correctamente.',
+            });
         } else {
-            setLoginError(error || 'Error durante el inicio de sesión'); 
+            setLoginError( 'Usuario o Contraseña incorrecta'); 
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Usuario o Contraseña incorrecta',
+            });
         }
     };
 

@@ -6,20 +6,27 @@ import axios from "axios";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import es from "date-fns/locale/es";
+import Swal from "sweetalert2";
 
-const AddForm = ({ fetchAppointments, handleCloseModal  }) => {
+const AddForm = ({ fetchAppointments, handleCloseModal }) => {
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
 
   const schema = yup.object().shape({
-    name: yup.string().required("Nombre es requerido"),
-    phone: yup.string().required("Teléfono es requerido"),
+    name: yup
+    .string()
+    .matches(/^[a-zA-Z\s]+$/, "El nombre solo puede contener letras")
+    .required("Nombre es requerido"),
+    phone: yup
+    .string()
+    .matches(/^[3][0-9]{9}$/, "El teléfono debe tener el formato 3814231548 (sin 0 y sin 15)")
+    .required("Teléfono es requerido"),
     appointmentType: yup.string().required("Tipo de consulta es requerido"),
     date: yup.date().required("Fecha de cita es requerida"),
   });
 
-   // Obtener la fecha de hoy para la restricción de fechas
-   const today = new Date();
+  // Obtener la fecha y hora actual
+  const now = new Date();
 
   const handleSubmit = async (values, { resetForm }) => {
     try {
@@ -37,11 +44,22 @@ const AddForm = ({ fetchAppointments, handleCloseModal  }) => {
         { withCredentials: true }
       );
 
+      Swal.fire({
+        icon: "success",
+        title: "Turno agregado",
+        text: "El turno se agregó correctamente",
+      });
+
       await fetchAppointments();
       resetForm();
-      handleCloseModal();  // Cerrar el modal después de agregar el turno
+      handleCloseModal(); // Cerrar el modal después de agregar el turno
     } catch (error) {
       console.error("Error al agregar turno:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: `Error al agregar turno: ${error.message}`,
+      });
     }
   };
 
@@ -72,6 +90,22 @@ const AddForm = ({ fetchAppointments, handleCloseModal  }) => {
         }
       }
     });
+
+    // Filtrar horarios si se seleccionó el día actual
+    if (
+      selectedDate &&
+      selectedDate.toDateString() === now.toDateString()
+    ) {
+      const currentHour = now.getHours();
+      const currentMinute = now.getMinutes();
+      return times.filter((time) => {
+        const [hour, minute] = time.split(":").map(Number);
+        return (
+          hour > currentHour ||
+          (hour === currentHour && minute >= currentMinute + 30)
+        );
+      });
+    }
 
     return times;
   };
@@ -150,7 +184,7 @@ const AddForm = ({ fetchAppointments, handleCloseModal  }) => {
                   dateFormat="dd/MM/yyyy"
                   locale={es}
                   className="form-control"
-                  minDate={today}
+                  minDate={now}
                 />
               </Form.Group>
               <Form.Group className="mb-3">

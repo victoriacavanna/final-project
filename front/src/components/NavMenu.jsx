@@ -5,6 +5,7 @@ import LogoDiente from '../assets/img/LogoDiente.png';
 import { useState } from 'react';
 import { home, services, appointments, contact } from '../routes/routes.js'; // Eliminé 'users' ya que no se estaba usando.
 import Login from './Login';
+import Swal from 'sweetalert2';
 
 const NavMenu = () => {
     const { isAuthenticated, login, logout } = useAuth();
@@ -13,9 +14,16 @@ const NavMenu = () => {
     const handleShowLogin = () => setShowLoginModal(true);
     const handleCloseLogin = () => setShowLoginModal(false);
 
-    const handleLogout =  () => {
+    const handleLogout = () => {
         logout();
-        return <Navigate to={home} />;
+        Swal.fire({
+            icon: 'success',
+            title: 'Sesión cerrada',
+            text: 'Has cerrado sesión correctamente.',
+        }).then(() => {
+            // Redirigir después de mostrar la alerta
+            return <Navigate to={home} />;
+        });
     };
 
     return (
