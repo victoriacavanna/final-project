@@ -27,7 +27,13 @@ const AddForm = ({ fetchAppointments, handleCloseModal }) => {
     )
     .required("Teléfono es requerido"),
     appointmentType: yup.string().required("Tipo de consulta es requerido"),
-    date: yup.date().required("Fecha de cita es requerida"),
+    date: yup
+    .date()
+    .required("Fecha de cita es requerida")
+    .nullable(),  
+    hour: yup
+    .string()
+    .required("Hora es requerida"),
   });
 
 
@@ -197,6 +203,7 @@ const AddForm = ({ fetchAppointments, handleCloseModal }) => {
               </Form.Group>
             </Col>
             <Col md="6">
+
               <Form.Group className="mb-3">
                 <Form.Label>Seleccionar Fecha</Form.Label>
                 <DatePicker
@@ -207,16 +214,25 @@ const AddForm = ({ fetchAppointments, handleCloseModal }) => {
                   }}
                   dateFormat="dd/MM/yyyy"
                   locale={es}
-                  className="form-control"
+                  className={`form-control ${errors.date && touched.date ? "is-invalid" : ""}`}
                   minDate={now}
                 />
+                <Form.Control.Feedback type="invalid">
+                {errors.date && touched.date && (
+    <div className="invalid-feedback">{errors.date}</div>
+  )}
+                </Form.Control.Feedback>
               </Form.Group>
+              
               <Form.Group className="mb-3">
                 <Form.Label>Seleccionar Hora</Form.Label>
                 <Form.Select
                   value={selectedTime}
-                  onChange={handleTimeChange}
-                  className="form-control"
+                  onChange={(event) => {
+                    handleTimeChange(event);
+                    setFieldValue("hour", event.target.value);
+                  }}
+                  className={`form-control ${errors.hour && touched.hour ? "is-invalid" : ""}`}
                 >
                   <option value="">Seleccionar hora</option>
                   {generateTimes().map((time, index) => (
@@ -225,7 +241,11 @@ const AddForm = ({ fetchAppointments, handleCloseModal }) => {
                     </option>
                   ))}
                 </Form.Select>
+                <Form.Control.Feedback type="invalid">
+                  {errors.hour}
+                </Form.Control.Feedback>
               </Form.Group>
+
             </Col>
           </Row>
           <Row className="d-flex justify-content-center">

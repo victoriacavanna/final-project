@@ -39,6 +39,9 @@ const UpdateModal = ({ show, handleClose, appointmentId, handleAddAppointment,up
       .date()
       .min(new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1), "No puedes seleccionar el día actual ni fechas pasadas")
       .required("Fecha de cita es requerida"),
+      hour: yup
+          .string()
+          .required("Hora es requerida"),
   });
 
   useEffect(() => {

@@ -86,3 +86,11 @@
     border-radius: 5px !important;
     padding: 10px 20px !important;
   }
+
+  .invalid-feedback {
+    display: block;
+    color: #dc3545; /* Rojo */
+    font-size: 0.875rem; /* Tamaño de letra */
+    margin-top: 0.25rem;
+  }
+  
